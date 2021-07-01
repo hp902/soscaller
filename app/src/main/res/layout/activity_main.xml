@@ -50,30 +50,32 @@
         android:scaleType="fitCenter"
         android:src="@drawable/sos"
         android:focusableInTouchMode="true"
+        android:clickable="true"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="true" />
 
     <ImageButton
 
         android:id="@+id/contact_button"
 
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:scaleType="fitCenter"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/bottombutton"
 
 
-        android:layout_marginBottom="64dp"
-        android:layout_marginStart="16dp"
-        android:descendantFocusability="blocksDescendants"
         android:clickable="true"
+        android:descendantFocusability="blocksDescendants"
+        android:focusable="true"
         android:focusableInTouchMode="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/contacts"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:focusable="true" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
