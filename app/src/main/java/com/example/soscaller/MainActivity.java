@@ -23,12 +23,9 @@ public class MainActivity extends AppCompatActivity {
         sosButton = findViewById(R.id.sos_button);
         contactButton = findViewById(R.id.contact_button);
 
-        contactButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
-                startActivity(intent);
-            }
+        contactButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
+            startActivity(intent);
         });
 
     }
