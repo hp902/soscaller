@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactHolder> {
 
     // List to store all the contact details
-    private ArrayList<Contact> contactList;
+    private ArrayList<ContactData> contactDataList;
     private Context mContext;
 
 
 
     // Constructor for the Class
-    public  MyAdapter(ArrayList<Contact> contactsList, Context context) {
-        this.contactList = contactsList;
+    public  MyAdapter(ArrayList<ContactData> contactsList, Context context) {
+        this.contactDataList = contactsList;
         this.mContext = context;
     }
 
@@ -39,17 +39,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactHolder> {
 
     @Override
     public int getItemCount() {
-        return contactList == null? 0: contactList.size();
+        return contactDataList == null? 0: contactDataList.size();
     }
 
     // This method is called when binding the data to the views being created in RecyclerView
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, final int position) {
-        final Contact contact = contactList.get(position);
+        final ContactData contactData = contactDataList.get(position);
 
         // Set the data to the views here
-        holder.setContactName(contact.getName());
-        holder.setContactNumber(contact.getNumber());
+        holder.setContactName(contactData.getName());
+        holder.setContactNumber(contactData.getNumber());
 
         // You can set click listners to indvidual items in the viewholder here
         // make sure you pass down the listner or make the Data members of the viewHolder public

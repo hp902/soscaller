@@ -1,11 +1,11 @@
 package com.example.soscaller;
 
-public class Contact {
+public class ContactData {
 
     private String name;
     private String number;
 
-    public Contact(String name, String number) {
+    public ContactData(String name, String number) {
         this.name = name;
         this.number = number;
 
