@@ -11,6 +11,10 @@ public class ContactData {
 
     }
 
+    public ContactData() {
+
+    }
+
     public String getNumber() {
         return number;
     }

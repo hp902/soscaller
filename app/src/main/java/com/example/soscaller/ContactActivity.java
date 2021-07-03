@@ -1,17 +1,15 @@
 package com.example.soscaller;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,18 +36,14 @@ public class ContactActivity extends AppCompatActivity {
 
         floatingActionButton = findViewById(R.id.fab_button);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DeviceContact.class);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            DeviceContactFragment deviceContactFragment = new DeviceContactFragment();
+            deviceContactFragment.show(getSupportFragmentManager().beginTransaction(),"My Fragment");
         });
 
 
         recycler = findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(layoutManager);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
         listAdapter = new MyAdapter(contactsList, this);
         recycler.setAdapter(listAdapter);
 
