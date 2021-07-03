@@ -87,7 +87,7 @@ public class DeviceContactFragment extends DialogFragment {
 
         ContentResolver contentResolver = requireActivity().getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null,null, null,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"ASC");
+                null);
         if (cursor.getCount()>0){
             while (cursor.moveToNext()){
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));

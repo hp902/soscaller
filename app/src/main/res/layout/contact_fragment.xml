@@ -13,6 +13,8 @@
         android:id="@+id/contact_recycler"
         android:layout_width="320dp"
         android:layout_height="650dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         tools:listitem="@layout/list_item"
         />
 
