@@ -1,26 +1,31 @@
-package com.example.soscaller;
+package com.example.soscaller.contact;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.soscaller.ContactData;
+import com.example.soscaller.R;
+
 import java.util.ArrayList;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactHolder> {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
     // List to store all the contact details
     private ArrayList<ContactData> contactDataList;
+    private ArrayList<ContactData> selected = new ArrayList<>();
+
     private Context mContext;
 
 
-
     // Constructor for the Class
-    public  MyAdapter(ArrayList<ContactData> contactsList, Context context) {
+    public ContactAdapter(ArrayList<ContactData> contactsList, Context context) {
         this.contactDataList = contactsList;
         this.mContext = context;
     }
@@ -39,7 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactHolder> {
 
     @Override
     public int getItemCount() {
-        return contactDataList == null? 0: contactDataList.size();
+        return contactDataList == null ? 0 : contactDataList.size();
     }
 
     // This method is called when binding the data to the views being created in RecyclerView
@@ -51,22 +56,36 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactHolder> {
         holder.setContactName(contactData.getName());
         holder.setContactNumber(contactData.getNumber());
 
-        // You can set click listners to indvidual items in the viewholder here
-        // make sure you pass down the listner or make the Data members of the viewHolder public
+        // You can set click listeners to individual items in the viewHolder here
+        holder.isCheckBox.setOnClickListener(v -> {
+            if(contactData.isChecked()){
+                selected.remove(position);
+
+                contactData.setChecked(false);
+            }else {
+                selected.add(contactData);
+                contactData.setChecked(true);
+            }
+        });
+
+        // make sure you pass down the listener or make the Data members of the viewHolder public
 
     }
 
     // This is your ViewHolder class that helps to populate data to the view
     public static class ContactHolder extends RecyclerView.ViewHolder {
+        //Initialize Variables
 
         private final TextView txtName;
         private final TextView txtNumber;
+        private final ImageView isCheckBox;
 
         public ContactHolder(View itemView) {
             super(itemView);
 
             txtName = itemView.findViewById(R.id.txt_name);
             txtNumber = itemView.findViewById(R.id.txt_number);
+            isCheckBox = itemView.findViewById(R.id.check_button);
         }
 
         public void setContactName(String name) {
@@ -76,5 +95,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ContactHolder> {
         public void setContactNumber(String number) {
             txtNumber.setText(number);
         }
+
     }
 }

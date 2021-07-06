@@ -1,18 +1,22 @@
 package com.example.soscaller;
 
-public class ContactData {
+import android.widget.ImageView;
+
+import java.io.Serializable;
+
+public class ContactData implements Serializable {
 
     private String name;
     private String number;
+    boolean isChecked = false;
+    private int imageView;
 
-    public ContactData(String name, String number) {
-        this.name = name;
-        this.number = number;
-
+    public boolean isChecked() {
+        return isChecked;
     }
 
-    public ContactData() {
-
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public String getNumber() {
@@ -30,4 +34,13 @@ public class ContactData {
     public void setNumber(String number) {
         this.number = number;
     }
+
+    public int getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(int imageView) {
+        this.imageView = imageView;
+    }
+
 }
