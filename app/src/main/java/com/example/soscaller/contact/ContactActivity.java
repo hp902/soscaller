@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,22 +18,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.soscaller.ContactData;
 import com.example.soscaller.R;
-import com.example.soscaller.devicecontact.DeviceContactActivity;
+import com.example.soscaller.devicecontact.MainActivity2;
+import com.example.soscaller.devicecontact.SelectUser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContactActivity extends AppCompatActivity {
 
-    private ContactAdapter contactAdapter;
-    private ArrayList<ContactData> selectedContacts;
+    private static final String TAG = "ContactActivity";
+
+    private List<SelectUser> selectedContacts;
     private RecyclerView recyclerView;
-    private FloatingActionButton floatingActionButton;
 
     private static final int PERMISSION_REQUEST_READ_CONTACTS = 100;
 
@@ -48,7 +50,9 @@ public class ContactActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_contact);
 
-        floatingActionButton = findViewById(R.id.fab_button);
+        loadData();
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.fab_button);
         recyclerView = findViewById(R.id.recycler_view);
 
         floatingActionButton.setOnClickListener(v -> {
@@ -57,66 +61,37 @@ public class ContactActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_READ_CONTACTS);
             } else {
 
-                Intent intent = new Intent(this, DeviceContactActivity.class);
+                Intent intent = new Intent(this, MainActivity2.class);
                 startActivity(intent);
 
             }
         });
 
-
-        loadData();
-
         buildRecyclerView();
-
-
     }
 
 
     private void loadData() {
-        // method to load arraylist from shared prefs
-        // initializing our shared prefs with name as
-        // shared preferences.
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-
-        // creating a variable for gson.
         Gson gson = new Gson();
-
-        // below line is to get to string present from our
-        // shared prefs if not present setting it as null.
-        String json = sharedPreferences.getString("Contact List", null);
-
-        // below line is to get the type of our array list.
-        Type type = new TypeToken<ArrayList<ContactData>>() {
-        }.getType();
-
-        // in below line we are getting data from gson
-        // and saving it to our array list
+        String json = sharedPreferences.getString("Main2", null);
+        Type type = new TypeToken<ArrayList<SelectUser>>() {}.getType();
         selectedContacts = gson.fromJson(json, type);
-
-        // checking below if the array list is empty or not
         if (selectedContacts == null) {
-            // if the array list is empty
-            // creating a new array list.
             selectedContacts = new ArrayList<>();
         }
 
-
+        Log.i(TAG, "DATA LOADED");
     }
 
-
     private void buildRecyclerView() {
-        // initializing our adapter class.
-        contactAdapter = new ContactAdapter(selectedContacts, this);
-
-        // adding layout manager to our recycler view.
+        ContactAdapter contactAdapter = new ContactAdapter(selectedContacts, this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
-
-        // setting layout manager to our recycler view.
         recyclerView.setLayoutManager(manager);
-
-        // setting adapter to our recycler view.
         recyclerView.setAdapter(contactAdapter);
+
+        Log.i(TAG, "RECYCLER VIEW BUILT");
     }
 
 
@@ -125,7 +100,7 @@ public class ContactActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, DeviceContactActivity.class);
+                Intent intent = new Intent(this, MainActivity2.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, " Until You Grant the permission ,we cannot display the names", Toast.LENGTH_SHORT).show();

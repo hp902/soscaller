@@ -4,8 +4,8 @@
       <root url="jar://$PROJECT_DIR$/../../app development/gradle-6.6.1/caches/transforms-2/files-2.1/5511f57e160c7e247f5d805a7544c561/viewpager2-1.0.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../app development/gradle-6.6.1/caches/transforms-2/files-2.1/5511f57e160c7e247f5d805a7544c561/viewpager2-1.0.0/res" />
       <root url="jar://$PROJECT_DIR$/../../app development/gradle-6.6.1/caches/transforms-2/files-2.1/5511f57e160c7e247f5d805a7544c561/viewpager2-1.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../app development/gradle-6.6.1/caches/transforms-2/files-2.1/5511f57e160c7e247f5d805a7544c561/viewpager2-1.0.0/res" />
       <root url="file://$PROJECT_DIR$/../../app development/gradle-6.6.1/caches/transforms-2/files-2.1/5511f57e160c7e247f5d805a7544c561/viewpager2-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />

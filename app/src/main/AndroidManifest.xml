@@ -3,6 +3,10 @@
     package="com.example.soscaller">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.sosCaller">
-        <activity android:name=".devicecontact.DeviceContactActivity"></activity>
+        <activity android:name=".devicecontact.MainActivity2" />
         <activity android:name=".contact.ContactActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
