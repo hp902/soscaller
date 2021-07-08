@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
+import com.example.soscaller.contact.SelectedUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,27 +26,32 @@ public class MainActivity2 extends AppCompatActivity {
 
     private static final String TAG = "MAINActivity2";
 
+    ArrayList<SelectedUser> selectedUsers;
+
     DatabaseAdapter mydb;
     SelectUserAdapter suAdapter;
-
-    List<SelectUser> selectUsersList;
+    List<SelectUser> selectUsersList = new ArrayList<>();
 
     RecyclerView recyclerView;
     SearchView search;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main2);
+        selectedUsers = getIntent().getParcelableArrayListExtra("Data");
 
-        loadData();
+        selectedUsers.addAll(suAdapter.getSelectedUsers());
+
+
 
         mydb = new DatabaseAdapter(getApplicationContext());
         recyclerView = findViewById(R.id.contacts_list);
         setRecyclerview();
-        saveData();
+
+        //saveData();
+
         search = findViewById(R.id.searchView);
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -62,6 +68,7 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
+        //saveData();
 
     }
 
@@ -69,11 +76,11 @@ public class MainActivity2 extends AppCompatActivity {
 
         /*new ContactLoader().execute();*/
 
-        if(selectUsersList.size() == 0) {
+        if (selectUsersList.size() == 0) {
             Log.i(TAG, "RECYCLER VIEW: Loading Contacts From device");
 
             new ContactLoader().execute();
-        }else{
+        } else {
             Log.i(TAG, "RECYCLER VIEW: Loading Contacts From sharedPreference");
 
             suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList);
@@ -94,7 +101,7 @@ public class MainActivity2 extends AppCompatActivity {
             selectUsersList = new ArrayList<>();
         }
 
-        Log.i(TAG, "DATA LOADED -->"+ selectUsersList.size());
+        Log.i(TAG, "DATA LOADED -->" + selectUsersList.size());
     }
 
     private void saveData() {
@@ -105,7 +112,7 @@ public class MainActivity2 extends AppCompatActivity {
         editor.putString("Main2", json);
         editor.apply();
 
-        Log.i(TAG, "DATA SAVED --> "+ selectUsersList.size());
+        Log.i(TAG, "DATA SAVED --> " + selectUsersList.size());
     }
 
     public class ContactLoader extends AsyncTask<Void, Void, List<SelectUser>> {

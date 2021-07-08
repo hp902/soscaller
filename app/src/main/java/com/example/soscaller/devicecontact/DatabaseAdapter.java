@@ -22,12 +22,6 @@ public class DatabaseAdapter {
 
     public List<SelectUser> getData() {
         List<SelectUser> data = new ArrayList<>();
-        String string = ContactsContract.Data.HAS_PHONE_NUMBER+" != 0 AND "+
-                ContactsContract.Data.MIMETYPE + " = " +
-                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
-                + " AND "+ ContactsContract.Data.RAW_CONTACT_ID+" = " +
-                ContactsContract.Data.NAME_RAW_CONTACT_ID;
-
 
         getPhoneNumber = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null,
@@ -45,7 +39,7 @@ public class DatabaseAdapter {
 
             while (getPhoneNumber.moveToNext()) {
                 String id = getPhoneNumber.getString(getPhoneNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                if(already.add(id)) {
+                if (already.add(id)) {
                     String name = getPhoneNumber.getString(getPhoneNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     String phoneNumber = getPhoneNumber.getString(getPhoneNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 

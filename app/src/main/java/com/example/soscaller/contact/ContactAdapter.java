@@ -18,14 +18,14 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
     // List to store all the contact details
-    private List<SelectUser> contactDataList;
-    private ArrayList<SelectUser> selected = new ArrayList<>();
+    private List<SelectedUser> contactDataList;
+    private ArrayList<SelectedUser> selected = new ArrayList<>();
 
     private Context mContext;
 
 
     // Constructor for the Class
-    public ContactAdapter(List<SelectUser> contactsList, Context context) {
+    public ContactAdapter(List<SelectedUser> contactsList, Context context) {
         this.contactDataList = contactsList;
         this.mContext = context;
     }
@@ -50,7 +50,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     // This method is called when binding the data to the views being created in RecyclerView
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, final int position) {
-        final SelectUser contactData = contactDataList.get(position);
+        final SelectedUser contactData = contactDataList.get(position);
 
         // Set the data to the views here
         holder.setContactName(contactData.getName());

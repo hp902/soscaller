@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class ContactActivity extends AppCompatActivity {
 
     private static final String TAG = "ContactActivity";
 
-    private List<SelectUser> selectedContacts;
+    private ArrayList<SelectedUser> selectedContacts;
     private RecyclerView recyclerView;
 
     private static final int PERMISSION_REQUEST_READ_CONTACTS = 100;
@@ -61,13 +62,17 @@ public class ContactActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_READ_CONTACTS);
             } else {
 
-                Intent intent = new Intent(this, MainActivity2.class);
-                startActivity(intent);
+                Intent mIntent = new Intent(this, MainActivity2.class);
+                mIntent.putParcelableArrayListExtra("Data", (ArrayList<? extends Parcelable>) selectedContacts);
+                startActivity(mIntent);
 
             }
         });
 
         buildRecyclerView();
+
+        saveData();
+
     }
 
 
@@ -75,13 +80,24 @@ public class ContactActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("Main2", null);
-        Type type = new TypeToken<ArrayList<SelectUser>>() {}.getType();
+        Type type = new TypeToken<ArrayList<SelectedUser>>() {}.getType();
         selectedContacts = gson.fromJson(json, type);
         if (selectedContacts == null) {
             selectedContacts = new ArrayList<>();
         }
 
         Log.i(TAG, "DATA LOADED");
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(selectedContacts);
+        editor.putString("Main2", json);
+        editor.apply();
+
+        Log.i(TAG, "DATA SAVED --> " + selectedContacts.size());
     }
 
     private void buildRecyclerView() {
