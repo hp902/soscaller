@@ -11,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
-import com.example.soscaller.devicecontact.SelectUser;
-import com.example.soscaller.devicecontact.SelectUserAdapter;
+import com.example.soscaller.SelectUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
@@ -65,7 +63,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
         holder.delete.setOnClickListener(v -> {
             onItemClick.onItemCheck(contactData);
-            notifyItemRangeChanged(position, getItemCount());
+            notifyDataSetChanged();/*
+            notifyItemRangeChanged(position, getItemCount());*/
         });
 
     }

@@ -1,17 +1,13 @@
 package com.example.soscaller.devicecontact;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
-import com.example.soscaller.devicecontact.MainActivity2;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.example.soscaller.SelectUser;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +30,6 @@ public class DatabaseAdapter {
 
     public void setGetSelected(ArrayList<SelectUser> getSelected) {
         this.getSelected = getSelected;
-        Toast.makeText(context,String.valueOf(this.getSelected.size()),Toast.LENGTH_SHORT).show();
     }
 
     public List<SelectUser> getData() {

@@ -1,4 +1,4 @@
-package com.example.soscaller.devicecontact;
+package com.example.soscaller;
 
 import java.io.Serializable;
 

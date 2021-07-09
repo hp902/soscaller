@@ -3,8 +3,8 @@ package com.example.soscaller.devicecontact;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
+import com.example.soscaller.SelectUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -21,15 +22,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class MainActivity2 extends AppCompatActivity {
+public class DeviceContactActivity extends AppCompatActivity {
 
-
-    private static final String TAG = "MainActivity2";
 
     ArrayList<SelectUser> selectedUsers;
 
     DatabaseAdapter mydb;
-    SelectUserAdapter suAdapter;
+    DeviceContactAdapter suAdapter;
     List<SelectUser> selectUsersList = new ArrayList<>();
 
     RecyclerView recyclerView;
@@ -44,8 +43,6 @@ public class MainActivity2 extends AppCompatActivity {
 
         loadData();
 
-        /* selectedUsers = (ArrayList<SelectUser>) getIntent().getSerializableExtra("key");*/
-
 
         mydb = new DatabaseAdapter(getApplicationContext());
 
@@ -59,15 +56,14 @@ public class MainActivity2 extends AppCompatActivity {
         search = findViewById(R.id.searchView);
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String stext) {
-                suAdapter.filter(stext);
+            public boolean onQueryTextChange(String searchText) {
+                suAdapter.filter(searchText);
                 return false;
             }
         });
@@ -78,15 +74,14 @@ public class MainActivity2 extends AppCompatActivity {
 
     private void setRecyclerview() {
 
-        /*new ContactLoader().execute();*/
-
         selectUsersList = mydb.getData();
 
-        suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList, new SelectUserAdapter.OnItemCheckListener() {
+        suAdapter = new DeviceContactAdapter(DeviceContactActivity.this, selectUsersList, new DeviceContactAdapter.OnItemCheckListener() {
             @Override
             public void onItemCheck(SelectUser selectUser) {
                 selectedUsers.add(selectUser);
                 selectedUsers = (ArrayList<SelectUser>) selectedUsers.stream().distinct().collect(Collectors.toList());
+                Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
                 saveData();
             }
 
@@ -97,7 +92,7 @@ public class MainActivity2 extends AppCompatActivity {
                 saveData();
             }
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity2.this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(DeviceContactActivity.this));
         recyclerView.setAdapter(suAdapter);
 
 
@@ -113,8 +108,6 @@ public class MainActivity2 extends AppCompatActivity {
         if (selectedUsers == null) {
             selectedUsers = new ArrayList<>();
         }
-
-        Log.i(TAG, "DATA LOADED --> " + selectedUsers.size());
     }
 
     private void saveData() {
@@ -124,40 +117,6 @@ public class MainActivity2 extends AppCompatActivity {
         String json = gson.toJson(selectedUsers);
         editor.putString("Main2", json);
         editor.apply();
-
-        Log.i(TAG, "DATA SAVED --> " + selectedUsers.size());
     }
 
-    /*public class ContactLoader extends AsyncTask<Void, Void, List<SelectUser>> {
-
-        @Override
-        protected List<SelectUser> doInBackground(Void... voids) {
-            return mydb.getData();
-        }
-
-        @Override
-        protected void onPostExecute(@NonNull List<SelectUser> selectUsers) {
-            if (!selectUsers.isEmpty()) {
-
-                selectUsersList = selectUsers;
-
-                suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList, new SelectUserAdapter.OnItemCheckListener() {
-                    @Override
-                    public void onItemCheck(SelectUser selectUser) {
-                        selectedUsers.add(selectUser);
-                    }
-
-                    @Override
-                    public void onItemUncheck(SelectUser selectUser) {
-                        selectedUsers.remove(selectUser);
-                    }
-                });
-                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity2.this));
-                recyclerView.setAdapter(suAdapter);
-
-                saveData();
-            }
-
-        }
-    }*/
 }

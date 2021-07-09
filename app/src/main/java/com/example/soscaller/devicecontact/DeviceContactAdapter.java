@@ -11,16 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
+import com.example.soscaller.SelectUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
-public class SelectUserAdapter extends RecyclerView.Adapter<SelectUserAdapter.MyContactListViewHolder> {
+public class DeviceContactAdapter extends RecyclerView.Adapter<DeviceContactAdapter.MyContactListViewHolder> {
 
     List<SelectUser> mainInfo;
-    private ArrayList<SelectUser> arraylist;
+    private final ArrayList<SelectUser> arraylist;
     Context context;
 
 
@@ -31,11 +32,11 @@ public class SelectUserAdapter extends RecyclerView.Adapter<SelectUserAdapter.My
     }
 
     @NonNull
-    private OnItemCheckListener onItemClick;
+    private final OnItemCheckListener onItemClick;
 
 
 
-    public SelectUserAdapter(Context context, List<SelectUser> mainInfo,@NonNull OnItemCheckListener onItemClick) {
+    public DeviceContactAdapter(Context context, List<SelectUser> mainInfo, @NonNull OnItemCheckListener onItemClick) {
         this.onItemClick = onItemClick;
         this.mainInfo = mainInfo;
         this.context = context;

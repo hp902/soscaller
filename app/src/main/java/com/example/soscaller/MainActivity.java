@@ -15,7 +15,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.soscaller.contact.ContactActivity;
-import com.example.soscaller.devicecontact.SelectUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 + "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
 
         contactButton.setFocusableInTouchMode(false);
-
         contactButton.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), ContactActivity.class);
             startActivity(intent);
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         sosButton.setFocusableInTouchMode(false);
         sosButton.setOnClickListener(v -> {
 
-            if (numbers.size() == 0 && numbers == null) {
+            if (numbers.size() == 0) {
                 Toast.makeText(this, "Please Select The Contacts", Toast.LENGTH_SHORT).show();
             } else {
                 /*Toast.makeText(this, numbers.get(0), Toast.LENGTH_SHORT).show();*/
