@@ -1,18 +1,17 @@
 package com.example.soscaller.devicecontact;
 
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SearchView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
-import com.example.soscaller.contact.SelectedUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -20,13 +19,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MainActivity2 extends AppCompatActivity {
 
 
-    private static final String TAG = "MAINActivity2";
+    private static final String TAG = "MainActivity2";
 
-    ArrayList<SelectedUser> selectedUsers;
+    ArrayList<SelectUser> selectedUsers;
 
     DatabaseAdapter mydb;
     SelectUserAdapter suAdapter;
@@ -35,22 +35,26 @@ public class MainActivity2 extends AppCompatActivity {
     RecyclerView recyclerView;
     SearchView search;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main2);
-        selectedUsers = getIntent().getParcelableArrayListExtra("Data");
 
-        selectedUsers.addAll(suAdapter.getSelectedUsers());
+        loadData();
 
+        /* selectedUsers = (ArrayList<SelectUser>) getIntent().getSerializableExtra("key");*/
 
 
         mydb = new DatabaseAdapter(getApplicationContext());
+
+        mydb.setGetSelected(selectedUsers);
+
         recyclerView = findViewById(R.id.contacts_list);
         setRecyclerview();
 
-        //saveData();
+        selectedUsers = (ArrayList<SelectUser>) selectedUsers.stream().distinct().collect(Collectors.toList());
 
         search = findViewById(R.id.searchView);
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -68,25 +72,35 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
-        //saveData();
 
     }
+
 
     private void setRecyclerview() {
 
         /*new ContactLoader().execute();*/
 
-        if (selectUsersList.size() == 0) {
-            Log.i(TAG, "RECYCLER VIEW: Loading Contacts From device");
+        selectUsersList = mydb.getData();
 
-            new ContactLoader().execute();
-        } else {
-            Log.i(TAG, "RECYCLER VIEW: Loading Contacts From sharedPreference");
+        suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList, new SelectUserAdapter.OnItemCheckListener() {
+            @Override
+            public void onItemCheck(SelectUser selectUser) {
+                selectedUsers.add(selectUser);
+                selectedUsers = (ArrayList<SelectUser>) selectedUsers.stream().distinct().collect(Collectors.toList());
+                saveData();
+            }
 
-            suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity2.this));
-            recyclerView.setAdapter(suAdapter);
-        }
+            @Override
+            public void onItemUncheck(SelectUser selectUser) {
+                selectedUsers.remove(selectUser);
+                selectedUsers = (ArrayList<SelectUser>) selectedUsers.stream().distinct().collect(Collectors.toList());
+                saveData();
+            }
+        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity2.this));
+        recyclerView.setAdapter(suAdapter);
+
+
     }
 
     private void loadData() {
@@ -95,27 +109,26 @@ public class MainActivity2 extends AppCompatActivity {
         String json = sharedPreferences.getString("Main2", null);
         Type type = new TypeToken<ArrayList<SelectUser>>() {
         }.getType();
-
-        selectUsersList = gson.fromJson(json, type);
-        if (selectUsersList == null) {
-            selectUsersList = new ArrayList<>();
+        selectedUsers = gson.fromJson(json, type);
+        if (selectedUsers == null) {
+            selectedUsers = new ArrayList<>();
         }
 
-        Log.i(TAG, "DATA LOADED -->" + selectUsersList.size());
+        Log.i(TAG, "DATA LOADED --> " + selectedUsers.size());
     }
 
     private void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(selectUsersList);
+        String json = gson.toJson(selectedUsers);
         editor.putString("Main2", json);
         editor.apply();
 
-        Log.i(TAG, "DATA SAVED --> " + selectUsersList.size());
+        Log.i(TAG, "DATA SAVED --> " + selectedUsers.size());
     }
 
-    public class ContactLoader extends AsyncTask<Void, Void, List<SelectUser>> {
+    /*public class ContactLoader extends AsyncTask<Void, Void, List<SelectUser>> {
 
         @Override
         protected List<SelectUser> doInBackground(Void... voids) {
@@ -128,11 +141,23 @@ public class MainActivity2 extends AppCompatActivity {
 
                 selectUsersList = selectUsers;
 
-                suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList);
+                suAdapter = new SelectUserAdapter(MainActivity2.this, selectUsersList, new SelectUserAdapter.OnItemCheckListener() {
+                    @Override
+                    public void onItemCheck(SelectUser selectUser) {
+                        selectedUsers.add(selectUser);
+                    }
+
+                    @Override
+                    public void onItemUncheck(SelectUser selectUser) {
+                        selectedUsers.remove(selectUser);
+                    }
+                });
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity2.this));
                 recyclerView.setAdapter(suAdapter);
 
+                saveData();
             }
+
         }
-    }
+    }*/
 }

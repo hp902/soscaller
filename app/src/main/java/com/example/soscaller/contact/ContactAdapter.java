@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
 import com.example.soscaller.devicecontact.SelectUser;
+import com.example.soscaller.devicecontact.SelectUserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +20,21 @@ import java.util.List;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
 
     // List to store all the contact details
-    private List<SelectedUser> contactDataList;
-    private ArrayList<SelectedUser> selected = new ArrayList<>();
+    private ArrayList<SelectUser> contactDataList;
+    Context context;
 
-    private Context mContext;
+    interface OnItemCheckListener{
+        void onItemCheck(SelectUser selectUser);
+    }
 
+    @NonNull
+    private final OnItemCheckListener onItemClick;
 
     // Constructor for the Class
-    public ContactAdapter(List<SelectedUser> contactsList, Context context) {
+    public ContactAdapter(ArrayList<SelectUser> contactsList, Context context, @NonNull OnItemCheckListener onItemClick) {
+        this.context = context;
+        this.onItemClick = onItemClick;
         this.contactDataList = contactsList;
-        this.mContext = context;
     }
 
     // This method creates views for the RecyclerView by inflating the layout
@@ -50,14 +57,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     // This method is called when binding the data to the views being created in RecyclerView
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, final int position) {
-        final SelectedUser contactData = contactDataList.get(position);
+        final SelectUser contactData = contactDataList.get(position);
 
         // Set the data to the views here
         holder.setContactName(contactData.getName());
         holder.setContactNumber(contactData.getPhone());
 
-
-        // make sure you pass down the listener or make the Data members of the viewHolder public
+        holder.delete.setOnClickListener(v -> {
+            onItemClick.onItemCheck(contactData);
+            notifyItemRangeChanged(position, getItemCount());
+        });
 
     }
 
@@ -67,12 +76,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
         private final TextView txtName;
         private final TextView txtNumber;
+        private final ImageView delete;
 
         public ContactHolder(View itemView) {
             super(itemView);
 
             txtName = itemView.findViewById(R.id.txt_name);
             txtNumber = itemView.findViewById(R.id.txt_number);
+            delete = itemView.findViewById(R.id.delete_button);
         }
 
         public void setContactName(String name) {

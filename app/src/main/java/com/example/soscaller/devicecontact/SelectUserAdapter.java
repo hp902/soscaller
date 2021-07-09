@@ -6,13 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soscaller.R;
-import com.example.soscaller.contact.SelectedUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +19,24 @@ import java.util.Locale;
 
 public class SelectUserAdapter extends RecyclerView.Adapter<SelectUserAdapter.MyContactListViewHolder> {
 
-    ArrayList<SelectedUser> selectedUsers = new ArrayList<>();
     List<SelectUser> mainInfo;
     private ArrayList<SelectUser> arraylist;
     Context context;
 
-    public SelectUserAdapter(Context context, List<SelectUser> mainInfo) {
+
+    interface OnItemCheckListener {
+        void onItemCheck(SelectUser selectUser);
+
+        void onItemUncheck(SelectUser selectUser);
+    }
+
+    @NonNull
+    private OnItemCheckListener onItemClick;
+
+
+
+    public SelectUserAdapter(Context context, List<SelectUser> mainInfo,@NonNull OnItemCheckListener onItemClick) {
+        this.onItemClick = onItemClick;
         this.mainInfo = mainInfo;
         this.context = context;
         this.arraylist = new ArrayList<>();
@@ -48,13 +58,14 @@ public class SelectUserAdapter extends RecyclerView.Adapter<SelectUserAdapter.My
             checkBoxSelectItem.setOnClickListener(view -> {
                 final SelectUser selectUser = mainInfo.get(getAdapterPosition());
                 CheckBox checkBox = (CheckBox) view;
-                selectUser.setCheckedBox(checkBox.isChecked());
 
-                //Adding to Contacts Activity
-                SelectedUser stdUser = new SelectedUser();
-                stdUser.setName(selectUser.getName());
-                stdUser.setPhone(selectUser.getPhone());
-                selectedUsers.add(stdUser);
+                if(checkBox.isChecked() && !selectUser.getCheckedBox()){
+                    onItemClick.onItemCheck(selectUser);
+                    selectUser.setCheckedBox(true);
+                }else{
+                    onItemClick.onItemUncheck(selectUser);
+                    selectUser.setCheckedBox(false);
+                }
 
                 notifyDataSetChanged();
             });
@@ -70,9 +81,11 @@ public class SelectUserAdapter extends RecyclerView.Adapter<SelectUserAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyContactListViewHolder holder, int position) {
+
         holder.textViewShowName.setText(mainInfo.get(position).getName());
         holder.textViewPhoneNumber.setText(mainInfo.get(position).getPhone());
         holder.checkBoxSelectItem.setChecked(mainInfo.get(position).getCheckedBox());
+
     }
 
     @Override
@@ -95,9 +108,5 @@ public class SelectUserAdapter extends RecyclerView.Adapter<SelectUserAdapter.My
         }
 
         notifyDataSetChanged();
-    }
-
-    public ArrayList<SelectedUser> getSelectedUsers(){
-        return selectedUsers;
     }
 }

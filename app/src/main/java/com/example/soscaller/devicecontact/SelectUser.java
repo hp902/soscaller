@@ -1,10 +1,16 @@
 package com.example.soscaller.devicecontact;
 
-public class SelectUser {
+import java.io.Serializable;
+
+public class SelectUser implements Serializable {
     String name;
     String phone;
     Boolean checkedBox = false;
 
+
+    public SelectUser() {
+
+    }
 
     public String getName() {
         return name;
@@ -29,4 +35,6 @@ public class SelectUser {
     public void setCheckedBox(Boolean checkedBox) {
         this.checkedBox = checkedBox;
     }
+
+
 }

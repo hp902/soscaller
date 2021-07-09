@@ -1,16 +1,24 @@
 package com.example.soscaller.devicecontact;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
+import com.example.soscaller.devicecontact.MainActivity2;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class DatabaseAdapter {
+
+    ArrayList<SelectUser> getSelected = new ArrayList<>();
 
     Cursor getPhoneNumber;
 
@@ -18,6 +26,15 @@ public class DatabaseAdapter {
 
     public DatabaseAdapter(Context context) {
         this.context = context;
+    }
+
+    public ArrayList<SelectUser> getGetSelected() {
+        return getSelected;
+    }
+
+    public void setGetSelected(ArrayList<SelectUser> getSelected) {
+        this.getSelected = getSelected;
+        Toast.makeText(context,String.valueOf(this.getSelected.size()),Toast.LENGTH_SHORT).show();
     }
 
     public List<SelectUser> getData() {
@@ -38,6 +55,7 @@ public class DatabaseAdapter {
             HashSet<String> already = new HashSet<>();
 
             while (getPhoneNumber.moveToNext()) {
+
                 String id = getPhoneNumber.getString(getPhoneNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
                 if (already.add(id)) {
                     String name = getPhoneNumber.getString(getPhoneNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
@@ -46,10 +64,18 @@ public class DatabaseAdapter {
                     SelectUser selectUser = new SelectUser();
                     selectUser.setName(name);
                     selectUser.setPhone(phoneNumber);
-                    selectUser.setCheckedBox(false);
+
+                    for(SelectUser selectUser1 : getSelected){
+                        if(selectUser1.getPhone().equals(selectUser.getPhone())){
+                            selectUser.setCheckedBox(true);
+                            break;
+                        }
+
+                        selectUser.setCheckedBox(false);
+                    }
+
                     data.add(selectUser);
                 }
-
 
             }
         } else {

@@ -6,9 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,13 +26,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContactActivity extends AppCompatActivity {
 
     private static final String TAG = "ContactActivity";
 
-    private ArrayList<SelectedUser> selectedContacts;
+    private ArrayList<SelectUser> selectedContacts;
     private RecyclerView recyclerView;
 
     private static final int PERMISSION_REQUEST_READ_CONTACTS = 100;
@@ -57,13 +54,13 @@ public class ContactActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
 
         floatingActionButton.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_READ_CONTACTS);
             } else {
 
                 Intent mIntent = new Intent(this, MainActivity2.class);
-                mIntent.putParcelableArrayListExtra("Data", (ArrayList<? extends Parcelable>) selectedContacts);
+                /*mIntent.putExtra("key", selectedContacts);*/
                 startActivity(mIntent);
 
             }
@@ -71,16 +68,24 @@ public class ContactActivity extends AppCompatActivity {
 
         buildRecyclerView();
 
-        saveData();
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loadData();
+        Toast.makeText(this, String.valueOf(selectedContacts.size()), Toast.LENGTH_SHORT).show();
+        buildRecyclerView();
+
+    }
 
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString("Main2", null);
-        Type type = new TypeToken<ArrayList<SelectedUser>>() {}.getType();
+        Type type = new TypeToken<ArrayList<SelectUser>>() {
+        }.getType();
         selectedContacts = gson.fromJson(json, type);
         if (selectedContacts == null) {
             selectedContacts = new ArrayList<>();
@@ -101,28 +106,32 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     private void buildRecyclerView() {
-        ContactAdapter contactAdapter = new ContactAdapter(selectedContacts, this);
+        ContactAdapter contactAdapter = new ContactAdapter(selectedContacts, this, selectUser -> {
+            selectedContacts.remove(selectUser);
+            saveData();
+        });
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(contactAdapter);
 
+        saveData();
+
         Log.i(TAG, "RECYCLER VIEW BUILT");
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, MainActivity2.class);
-                startActivity(intent);
+                Intent mIntent = new Intent(this, MainActivity2.class);
+                /*mIntent.putExtra("key", selectedContacts);*/
+                startActivity(mIntent);
             } else {
                 Toast.makeText(this, " Until You Grant the permission ,we cannot display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
 
 }
