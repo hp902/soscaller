@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         sosButton = findViewById(R.id.sos_button);
         contactButton = findViewById(R.id.contact_button);
+        ArrayList<String> numbers = new ArrayList<>();
 
         loadData();
 
@@ -89,6 +90,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loadData();
+
+        for (SelectUser selectUser : selectedContacts) {
+            numbers.add(selectUser.getPhone());
+        }
     }
 
     private void loadData() {
