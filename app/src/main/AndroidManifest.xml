@@ -16,7 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.sosCaller">
         <activity android:name=".devicecontact.DeviceContactActivity" />
-        <activity android:name=".contact.ContactActivity" />
+        <activity
+            android:name=".contact.ContactActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

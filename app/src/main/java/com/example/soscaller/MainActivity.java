@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 + System.getProperty("line.separator") + "-SOS"
                 + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
+                + "Click on this link to get the location: "
                 + "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
 
         contactButton.setFocusableInTouchMode(false);
