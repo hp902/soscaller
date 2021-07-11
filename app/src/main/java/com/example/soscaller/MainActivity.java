@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         sosButton = findViewById(R.id.sos_button);
         contactButton = findViewById(R.id.contact_button);
-        ArrayList<String> numbers = new ArrayList<>();
 
         loadData();
 
@@ -91,13 +90,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        gpsTracker.setOnLocationChangeListener((longitude, latitude) -> {
+            this.longitude=longitude;
+            this.latitude=latitude;
+            updateMessage();
+        });
+
+    }
+
+    private void updateMessage() {
+        message = "This is Test SOS message with last known location"
+                + System.getProperty("line.separator") + "-SOS"
+                + System.getProperty("line.separator")
+                + System.getProperty("line.separator")
+                + "Click on this link to get the location: "
+                + "https://www.google.com/maps/search/?api=1&query=" +
+                this.latitude + "," + this.longitude;
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         loadData();
-
+        numbers.clear();
         for (SelectUser selectUser : selectedContacts) {
             numbers.add(selectUser.getPhone());
         }
@@ -120,9 +135,10 @@ public class MainActivity extends AppCompatActivity {
     private void sendSMS() {
         try {
             SmsManager smsManager = SmsManager.getDefault();
+            ArrayList<String> messageArray = smsManager.divideMessage(message);  // To manage long length messages
 
             for (String number : numbers) {
-                smsManager.sendTextMessage(number, null, message, null, null);
+                smsManager.sendMultipartTextMessage(number, null, messageArray, null, null);
             }
 
             Toast.makeText(getApplicationContext(), "Message Sent",
