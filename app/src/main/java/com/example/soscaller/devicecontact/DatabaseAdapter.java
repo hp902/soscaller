@@ -24,10 +24,6 @@ public class DatabaseAdapter {
         this.context = context;
     }
 
-    public ArrayList<SelectUser> getGetSelected() {
-        return getSelected;
-    }
-
     public void setGetSelected(ArrayList<SelectUser> getSelected) {
         this.getSelected = getSelected;
     }

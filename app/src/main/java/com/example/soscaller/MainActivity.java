@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendSMS() {
         try {
+
             SmsManager smsManager = SmsManager.getDefault();
 
             for (String number : numbers) {
@@ -163,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean CheckingPermissionIsEnabledOrNot() {
 
         int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_CONTACTS);
-
         int SecondPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_FINE_LOCATION);
         int ThirdPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), SEND_SMS);
         int FourthPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_COARSE_LOCATION);
