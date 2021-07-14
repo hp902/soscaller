@@ -92,6 +92,7 @@ public class DeviceContactActivity extends AppCompatActivity {
                 saveData();
             }
         });
+
         recyclerView.setLayoutManager(new LinearLayoutManager(DeviceContactActivity.this));
         recyclerView.setAdapter(suAdapter);
 
